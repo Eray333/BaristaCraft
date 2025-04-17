@@ -21,6 +21,10 @@ public class UImanager : MonoBehaviour
         Debug.Log("Options button çalýþtý");
 
     }
+    
 
+        
+
+    }
         
 }
