@@ -1,21 +1,22 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro; // TextMeshPro desteði
+
+using UnityEngine.SceneManagement;
 
 public class StoreNameManager : MonoBehaviour
 {
-    public InputField storeNameInputField;  // InputField referansý
-    public Text displayStoreNameText;  // Dükkan adýný gösteren metin
+    public TMP_InputField storeNameInputField; // TMP kullanýyoruz
+    public TMP_Text displayStoreNameText;
 
     public void SetStoreName()
     {
         string storeName = storeNameInputField.text;
 
-        if (!string.IsNullOrEmpty(storeName))  // Dükkan adý boþ deðilse
+        if (!string.IsNullOrEmpty(storeName))
         {
             displayStoreNameText.text = "Dükkan Adýnýz: " + storeName;
-            PlayerPrefs.SetString("StoreName", storeName);  // Dükkan adýný kaydet
-            // Dükkan adýný kaydettikten sonra, baþka bir sahneye geçiþ yapabilirsin
-            // SceneManager.LoadScene("MainGameScene");  // Yani oyun sahnesine geç
+            PlayerPrefs.SetString("StoreName", storeName);
+            SceneManager.LoadScene("Game"); // sahne adýn buysa
         }
         else
         {
