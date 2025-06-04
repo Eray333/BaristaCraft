@@ -1,3 +1,4 @@
+ï»¿using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,11 +6,21 @@ public class CoffeeGameManager : MonoBehaviour
 {
     public List<string> currentInput = new List<string>();
     private List<string> currentRecipe = new List<string>();
+    public TMP_Text recipeText;
+
 
     void Start()
     {
-        SetNewRecipe("latte"); // ilk tarif örneði
+        SetRandomRecipe();
     }
+
+    void SetRandomRecipe()
+    {
+        string[] recipes = { "latte", "iced coffee", "mocha", "americano", "vanilla cream brew", "milk brew" };
+        int randomIndex = Random.Range(0, recipes.Length);
+        SetNewRecipe(recipes[randomIndex]);
+    }
+
 
     public void OnIngredientClicked(string ingredient)
     {
@@ -24,6 +35,7 @@ public class CoffeeGameManager : MonoBehaviour
 
     void CheckRecipe()
     {
+
         bool correct = true;
         for (int i = 0; i < currentRecipe.Count; i++)
         {
@@ -36,12 +48,12 @@ public class CoffeeGameManager : MonoBehaviour
 
         if (correct)
         {
-            Debug.Log("?? Doðru kahve hazýrlandý!");
-            // TODO: müþteri memnuniyeti, animasyon vb.
+            Debug.Log("?? DoÄŸru kahve hazÄ±rlandÄ±!");
+            // TODO: mÃ¼ÅŸteri memnuniyeti, animasyon vb.
         }
         else
         {
-            Debug.Log("? Tarif yanlýþ!");
+            Debug.Log("? Tarif yanlÄ±ÅŸ!");
         }
 
         currentInput.Clear();
@@ -72,10 +84,19 @@ public class CoffeeGameManager : MonoBehaviour
                 currentRecipe.AddRange(new List<string> { "milk", "syrup", "ice" });
                 break;
             default:
-                Debug.LogWarning("Tarif bulunamadý!");
+                Debug.LogWarning("Tarif bulunamadÄ±!");
                 break;
         }
 
         Debug.Log("Yeni tarif: " + coffeeName);
+        if (recipeText != null)
+        {
+            recipeText.text = "SipariÅŸ: " + string.Join(" â†’ ", currentRecipe);
+        }
+
     }
 }
+
+
+
+
