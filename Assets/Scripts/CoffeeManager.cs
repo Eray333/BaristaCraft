@@ -1,12 +1,18 @@
-﻿using TMPro;
+﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+
+
 
 public class CoffeeGameManager : MonoBehaviour
 {
     public List<string> currentInput = new List<string>();
     private List<string> currentRecipe = new List<string>();
     public TMP_Text recipeText;
+    public TMP_Text feedbackText;
+    public GameObject retryButton;
+
 
 
     void Start()
@@ -35,6 +41,10 @@ public class CoffeeGameManager : MonoBehaviour
 
     void CheckRecipe()
     {
+        for (int i = 0; i < currentRecipe.Count; i++)
+        {
+            Debug.Log($"Beklenen: {currentRecipe[i]} - Girilen: {currentInput[i]}");
+        }
 
         bool correct = true;
         for (int i = 0; i < currentRecipe.Count; i++)
@@ -48,16 +58,58 @@ public class CoffeeGameManager : MonoBehaviour
 
         if (correct)
         {
-            Debug.Log("?? Doğru kahve hazırlandı!");
-            // TODO: müşteri memnuniyeti, animasyon vb.
+            Debug.Log(" Doğru kahve hazırlandı!");
+            if (feedbackText != null)
+                feedbackText.text = " Doğru kahve hazırlandı!";
+            StartCoroutine(ClearFeedbackText());
+
+            SetRandomRecipe();
         }
         else
         {
-            Debug.Log("? Tarif yanlış!");
+            Debug.Log("❌ Tarif yanlış!");
+            if (feedbackText != null)
+                feedbackText.text = "❌ Tarif yanlış!";
+            if (retryButton != null)
+                retryButton.SetActive(true);
         }
 
         currentInput.Clear();
     }
+    public void RetryRecipe()
+    {
+        currentInput.Clear();
+
+        if (feedbackText != null)
+            feedbackText.text = "";
+
+        if (retryButton != null)
+            retryButton.SetActive(false);
+
+        // 👇 Tarifi tekrar göster
+        if (recipeText != null)
+        {
+            recipeText.text = $"Sipariş: {string.Join(" → ", currentRecipe)}";
+            StartCoroutine(HideRecipeAfterDelay());
+        }
+    }
+
+    private IEnumerator HideRecipeAfterDelay()
+    {
+        yield return new WaitForSeconds(3f); // 3 saniye bekle
+        if (recipeText != null)
+            recipeText.text = "";
+    }
+
+    private IEnumerator ClearFeedbackText()
+    {
+        yield return new WaitForSeconds(2f); // 2 saniye bekle
+        if (feedbackText != null)
+            feedbackText.text = "";
+    }
+
+
+
 
     void SetNewRecipe(string coffeeName)
     {
@@ -86,13 +138,17 @@ public class CoffeeGameManager : MonoBehaviour
             default:
                 Debug.LogWarning("Tarif bulunamadı!");
                 break;
+
         }
 
         Debug.Log("Yeni tarif: " + coffeeName);
+
         if (recipeText != null)
         {
-            recipeText.text = "Sipariş: " + string.Join(" → ", currentRecipe);
+            recipeText.text = $"Sipariş: {coffeeName} ({string.Join(" → ", currentRecipe)})";
+            StartCoroutine(HideRecipeAfterDelay());
         }
+
 
     }
 }
